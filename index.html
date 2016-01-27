@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>WITS - Scheduler</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -10,11 +10,33 @@
   <style>
 
   </style>
+
+  <script>
+      function validateForm() {
+
+      var fName = document.forms["registrationForm"]["fName"].value;
+      var lName = document.forms["registrationForm"]["lName"].value;
+      var email = document.forms["registrationForm"]["email"].value;
+
+        if (fName == null || fName == "") {
+          document.getElementById("validation").innerHTML = "First name must be filled out.";
+            return false;
+        }
+        else if (lName == null || lName == "") {
+          document.getElementById("validation").innerHTML = "Last name must be filled out.";
+            return false;
+        }
+        else if (email == null || email == "") {
+            document.getElementById("validation").innerHTML = "Email must be filled out.";
+            return false;
+        }
+
+      }
+  </script>
 </head>
 <body>
 
-
-
+  <!-- NAV BAR -->
   <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -40,16 +62,32 @@
       </div>
     </nav>
 
+    <!-- Jumbotron --->
     <div class="jumbotron">
         <div class="container">
           <h1>Come join WITS!</h1>
           <p>Sign up for WITS today and begin crafting your perfect schedule!</p>
-          <p><a class="btn btn-primary btn-lg" href="#" role="button">Register &raquo;</a></p>
+          <p><a class="btn btn-primary btn-lg" href="#" role="button">Register Now &raquo;</a></p>
         </div>
     </div>
 
+    <!-- Registration Form -->
     <div class="container">
-      <p>What is wits?</p>
+      <h2>Register:</h2>
+      <form name="registrationForm" method="post" onsubmit="return validateForm()">
+        <input type="text" class="form-control" placeholder="First Name" aria-describedby="basic-addon" name="fName">
+        <br />
+        <input type="text" class="form-control" placeholder="Last Name" aria-describedby="basic-addon" name="lName">
+        <br />
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon2" name="email">
+          <span class="input-group-addon" id="basic-addon2">@wit.edu</span>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-success">Register</button>
+      </form>
+      <br />
+      <p id="validation"></p>
     </div>
 
 </body>
