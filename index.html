@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+  <!-- CSS --->
   <style>
 
   </style>
@@ -18,7 +20,7 @@
       var lName = document.forms["registrationForm"]["lName"].value;
       var email = document.forms["registrationForm"]["email"].value;
 
-        if (fName == null || fName == "") {
+      if (fName == null || fName == "") {
           document.getElementById("validation").innerHTML = "First name must be filled out.";
             return false;
         }
@@ -30,7 +32,6 @@
             document.getElementById("validation").innerHTML = "Email must be filled out.";
             return false;
         }
-
       }
   </script>
 </head>
@@ -46,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">WITS</a>
+          <a class="navbar-brand" href="index.html">WITS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <form class="navbar-form navbar-right">
@@ -64,11 +65,17 @@
 
     <!-- Jumbotron --->
     <div class="jumbotron">
-        <div class="container">
-          <h1>Come join WITS!</h1>
+      <div class="container">
+        <div class="col-md-8">
+          <h2>Come join WITS!</h2>
           <p>Sign up for WITS today and begin crafting your perfect schedule!</p>
           <p><a class="btn btn-primary btn-lg" href="#" role="button">Register Now &raquo;</a></p>
         </div>
+        <div class="col-md-4">
+          <br />
+          <img src="Images/calendar.png" alt="Calendar" style="width:128px;height:128px;" />
+        </div>
+      </div>
     </div>
 
     <!-- Registration Form -->
