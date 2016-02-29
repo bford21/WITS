@@ -5,10 +5,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-  <script type="text/javascript" src="jquery-1.11.3-jquery.min.js"></script>
+
   <script type="text/javascript" src="validation.min.js"></script>
 
   <!-- CSS --->
@@ -45,7 +46,6 @@
         if(xhr.responseText.indexOf("Success") > -1){
           window.location = "http://www.witsboston.com/userHome.php";
         }
-
       } else {
         alert('There was a problem with the request.');
       }
@@ -53,12 +53,12 @@
   }
   }
 
-  function validateForm() {
+  /*function validateForm() {
 
       /*if(password !== passwordConfirm){
         document.getElementById("validation").innerHTML = "Passwords do not match.";
         return false;
-      }*/
+      }
       //  document.getElementById("validation").innerHTML = "Test";
 
       var ajaxRequest;  // The variable that makes Ajax possible!
@@ -105,6 +105,43 @@
                ajaxRequest.open("GET", "register.php" + queryString, true);
                ajaxRequest.send(null);
 
+      }
+      */
+
+      function validateRegister(){
+        var fname = document.getElementById('fname').value;
+        var lname = document.getElementById('lname').value;
+        var password = document.getElementById('password').value;
+        var passwordConfirm = document.getElementById('passwordConfirm').value;
+        var email = document.getElementById('email').value;
+
+        var xhr;
+        if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+            xhr = new XMLHttpRequest();
+        } else if (window.ActiveXObject) { // IE 8 and older
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        var data = "fname=" + fname + "&lname=" + lname + "&email=" + email + "&password=" + password + "&passwordConfirm=" + passwordConfirm;
+        xhr.open("POST", "register.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(data);
+
+        xhr.onreadystatechange = display_data;
+        function display_data() {
+         if (xhr.readyState == 4) {
+           if (xhr.status == 200) {
+             document.getElementById("validation").innerHTML = xhr.responseText;
+
+             // Success -- need to edit what success means
+             if(xhr.responseText.indexOf("Success") > -1){
+               window.location = "http://www.witsboston.com/confirm.html";
+             }
+           } else {
+             alert('There was a problem with the request.');
+           }
+          }
+        }
       }
 
   </script>
@@ -156,21 +193,21 @@
     <!-- Registration Form -->
     <div class="container">
       <h2>Register:</h2>
-      <form name="registrationForm" onsubmit="validateForm" action="register.php" method="post" >
-        <input type="text" class="form-control" placeholder="First Name" aria-describedby="basic-addon" name="fname" required="true" />
+      <form name="registrationForm" method="post" >
+        <input type="text" class="form-control" placeholder="First Name" aria-describedby="basic-addon" id="fname" required="true" />
         <br />
-        <input type="text" class="form-control" placeholder="Last Name" aria-describedby="basic-addon" name="lname" required="true" />
+        <input type="text" class="form-control" placeholder="Last Name" aria-describedby="basic-addon" id="lname" required="true" />
         <br />
-        <input type="password" class ="form-control" placeholder="Password" aria-describedby="bassic-addon" name="password" required="true" />
+        <input type="password" class ="form-control" placeholder="Password" aria-describedby="bassic-addon" id="password" required="true" />
         <br />
-        <input type="password" class ="form-control" placeholder="Confirm Password" aria-describedby="bassic-addon" name="passwordConfirm" required="true" />
+        <input type="password" class ="form-control" placeholder="Confirm Password" aria-describedby="bassic-addon" id="passwordConfirm" required="true" />
         <br />
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon2" name="email" required="true" />
+          <input type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon2" id="email" required="true" />
           <span class="input-group-addon" id="basic-addon2">@wit.edu</span>
         </div>
         <br />
-        <button type="submit" class="btn btn-success">Register</button>
+        <button type="button" class="btn btn-success" onclick="validateRegister()">Register</button>
       </form>
       <br />
       <p id="validation"></p>

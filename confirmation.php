@@ -2,18 +2,8 @@
 $ccode = $_GET['ccode'];
 $email = $_GET['email'];
 
-$username = "a7546256_db"; //mysql username
-$password = "comp497"; //mysql password
-$hostname = "mysql1.000webhost.com"; //hostname
-$databasename = 'a7546256_db'; //databasename
-
-//connect to database
-$conn = new mysqli($hostname, $username, $password, $databasename);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+//Connect to DB
+require('dbconnect.php');
 
 $sql = "SELECT ccode FROM users WHERE email='$email'";
 
@@ -31,6 +21,4 @@ if($ccode == $row['ccode']){
   echo "error";
 }
 
-
-
-  ?>
+?>
