@@ -23,6 +23,12 @@
 	$sql = "SELECT COUNT(email) AS total FROM classList WHERE email='$email'";
 	$result2 = $conn->query($sql);
 	$classListNum = $result2->fetch_assoc();
+
+	// Get all professors
+	$sql = "SELECT DISTINCT professor FROM classes ORDER BY professor";
+	$result3 = $conn->query($sql);
+	//$professors = $result2->fetch_assoc();
+
 ?>
 
 <!DOCTYPE html>
@@ -39,17 +45,53 @@
 
   <!-- CSS --->
   <style>
-	#alert{
+	#alert-success, #alert-error{
 		display: none;
+	}
+	#professorsDropDown{
+		display: none;
+	}
+	#professorsDropDown2{
+		display: none;
+	}
+	.glyphicon.glyphicon-plus{
+		color: green;
 	}
   </style>
 
   <script>
 
 	$(document).ready(function(){
+
+		// Show professorsDropDown2
+		$('#addProfessor').click(function(){
+				$('#professorsDropDown2').show();
+		});
+
+		// Close Alerts
     $('.close').click(function(){
-        $("#alert").hide();
+        $("#alert-success").hide();
+				$("#alert-error").hide();
     });
+
+		// Change in filter professor checkbox
+		$(':checkbox').change(function(){
+				if($(':checkbox').is(':checked')){
+					$("#professorsDropDown").show();
+				}else{
+					$('#professorsDropDown2').hide();
+					$("#professorsDropDown").hide();
+					$('tr:hidden').show();
+				}
+    });
+
+		$('#professors').change(function(){
+			var prof = $('#professors').val();
+			prof = prof.replace(/[!\"#$%&'\(\)\*\+,\.\/:;<=>\?\@\[\\\]\^`\{\|\}~]/g, '');
+			prof = prof.split(' ').join('');
+			$("." + prof).hide();
+
+		})
 	});
 
 	function getCourseNum(){
@@ -94,7 +136,7 @@
 					xhr = new ActiveXObject("Microsoft.XMLHTTP");
 			}
 
-			var data = "crn=" + crn;
+			var data = "crn=" + crn + "&email=" + '<?php echo $email;?>';
 			xhr.open("POST", "searchCRN.php", true);
 		}
 		else if(searchType == "className"){
@@ -106,7 +148,7 @@
 					xhr = new ActiveXObject("Microsoft.XMLHTTP");
 			}
 
-			var data = "className=" + className;
+			var data = "className=" + className + "&email=" + '<?php echo $email;?>';
 			xhr.open("POST", "searchClassName.php", true);
 		}
 		else if(searchType == "courseNum"){
@@ -121,7 +163,7 @@
 					xhr = new ActiveXObject("Microsoft.XMLHTTP");
 			}
 
-			var data = "subject=" + subject + "&courseNum=" + courseNum;
+			var data = "subject=" + subject + "&courseNum=" + courseNum + "&email=" + '<?php echo $email;?>';
 			xhr.open("POST", "searchCourseNum.php", true);
 		}
 
@@ -141,6 +183,7 @@
 			}
 		}
 
+		// ADD CLASS to CLASS LIST
 		function addClass(crn){
 			var crn = crn;
 			var email = '<?php echo $email;?>';
@@ -162,16 +205,24 @@
 			 if (xhr.readyState == 4) {
 				 if (xhr.status == 200) {
 					 var results = xhr.responseText;
-					 document.getElementById("classListNum").innerHTML=results;
-					 $(document).ready(function(){
-					 	$("#alert").show();
-					 });
-					 }
+
+					 if(results.indexOf('Error') > -1){
+						 $(document).ready(function(){
+							$("#alert-error").show();
+						 });
+						}else{
+							document.getElementById("classListNum").innerHTML=results;
+							document.getElementById(crn).disabled = true;
+							$(document).ready(function(){
+							 $("#alert-success").show();
+							});
+						}
 				 } else {
 					 alert('There was a problem with the request.');
 				 }
 				}
 			}
+		}
 
   </script>
 </head>
@@ -181,7 +232,7 @@
   <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.html">WITS</a>
+          <a class="navbar-brand" href="userHome.php">WITS</a>
 					<a class="navbar-brand" href="classList.php ">Class List <span class="badge" id="classListNum"><?php echo $classListNum['total'] ?></span></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
@@ -190,9 +241,13 @@
             <button type="submit" class="btn btn-success" >Logout</button>
           </form>
         </div><!--/.navbar-collapse -->
-				<div class="alert alert-success fade in" id="alert" >
+				<div class="alert alert-success fade in" id="alert-success" >
 					<a href="#" class="close" aria-label="close">&times;</a>
 					<strong>Success!</strong> You added a new class to your class list!
+				</div>
+				<div class="alert alert-danger fade in" id="alert-error" >
+					<a href="#" class="close" aria-label="close">&times;</a>
+					<strong>Error!</strong> Class has already been added to your class list!
 				</div>
       </div>
     </nav>
@@ -202,7 +257,7 @@
       <div class="container">
         <div class="col-md-8">
           <h2>Welcome back <?php echo $fname ?>!</h2>
-          <p> Search for classes below and start adding them to your schedule!</p>
+          <p> Search for classes below and start adding them to your class list!</p>
         </div>
         <div class="col-md-4">
           <br />
@@ -263,6 +318,37 @@
 				<button type="button" class="btn btn-success" onclick="search('courseNum')">Search</button>
 			</form>
 
+			<br />
+		</div>
+
+		<div class="container">
+			<form class="form-inline" role="form">
+			    <label><input type="checkbox" />Filter Professors</label>
+				<br />
+				<br />
+				<div id="professorsDropDown">
+					<select class="form-control" id="professors">
+						<option>Select a professor</option>
+						<?php
+							$temp = array();
+							while ($row = mysqli_fetch_array($result3)) {
+								 echo "<option value='" . $row['professor'] . "'>" . $row['professor']. "</option>";
+							}
+							?>
+					</select>
+					<span class="glyphicon glyphicon-plus" aria-hidden="true" id="addProfessor">Add</span>
+				</div>
+				<div id="professorsDropDown2">
+					<select class="form-control" id="professors">
+						<option>Select a professor</option>
+						<?php
+							while ($row = mysqli_fetch_array($result3)) {
+								 echo "<option value='" . $row['professor'] . "'>" . $row['professor']. "</option>";
+							}
+							?>
+					</select>
+				</div>
+			</form>
 			<br />
 			<br />
 		</div>
