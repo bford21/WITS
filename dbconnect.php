@@ -1,9 +1,9 @@
 <?php
 ########## MySql details #############
-$username = "a7546256_db"; //mysql username
-$dbpassword = "comp497"; //mysql password
-$hostname = "mysql1.000webhost.com"; //hostname
-$databasename = 'a7546256_db'; //databasename
+$username = ""; //mysql username
+$dbpassword = ""; //mysql password
+$hostname = ""; //hostname
+$databasename = ''; //databasename
 
 //connect to database
 $conn = new mysqli($hostname, $username, $dbpassword, $databasename);
